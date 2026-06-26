@@ -5,9 +5,9 @@ import * as XLSX from 'xlsx';
 // ============================================================
 // CONFIGURA AQUÍ TUS LLAVES DE SUPABASE
 // ============================================================
-const SUPABASE_URL = "https://itimhetmoukdlnkugdlr.supabase.co"
-;
-const SUPABASE_ANON_KEY = 'sb_publishable__bHxJlw4RdOCX9A0T4Ytvw_25g0uRZS';
+const SUPABASE_URL = 'https://itimhetmoukdlnkugdlr.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable__bHxJlw4RdOCX9A0T4Ytvw_25g0uRZS
+';
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ============================================================
@@ -113,6 +113,7 @@ export default function App() {
   }, [session, refreshKey]);
 
   const isAdmin = profile?.rol === 'admin';
+  const isContador = profile?.rol === 'contador' || isAdmin;
 
   if (loading) return <div className="app"><style>{css}</style><div className="content">Cargando...</div></div>;
   if (!session) return <Login />;
@@ -131,7 +132,7 @@ export default function App() {
 
       <div className="tabs">
         <div className={`tab ${tab === 'dashboard' ? 'active' : ''}`} onClick={() => setTab('dashboard')}>Dashboard / Diferencias</div>
-        {isAdmin && <div className={`tab ${tab === 'conteo' ? 'active' : ''}`} onClick={() => setTab('conteo')}>Registrar Conteo Físico</div>}
+        {isContador && <div className={`tab ${tab === 'conteo' ? 'active' : ''}`} onClick={() => setTab('conteo')}>Registrar Conteo Físico</div>}
         {isAdmin && <div className={`tab ${tab === 'existencia' ? 'active' : ''}`} onClick={() => setTab('existencia')}>Existencia en Sistema</div>}
         {isAdmin && <div className={`tab ${tab === 'catalogos' ? 'active' : ''}`} onClick={() => setTab('catalogos')}>Almacenes / Productos</div>}
       </div>
@@ -145,7 +146,7 @@ export default function App() {
             setFiltroAlmacen={setFiltroAlmacen}
           />
         )}
-        {tab === 'conteo' && isAdmin && (
+        {tab === 'conteo' && isContador && (
           <RegistrarConteo
             almacenes={almacenes} productos={productos} userId={session.user.id}
             onSaved={() => setRefreshKey(k => k + 1)}
